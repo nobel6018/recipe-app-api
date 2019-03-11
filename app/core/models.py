@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
 )
 from django.utils import timezone
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 
 class UserManager(BaseUserManager):
@@ -62,3 +63,20 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Recipe(models.Model):
+    """Recipe object"""
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE
+    )
+    title = models.CharField(max_length=255)
+    time_minutes = models.IntegerField()
+    price = models.DecimalField(max_digits=8, decimal_places=3)
+    link = models.CharField(max_length=255, blank=True, default='')
+    ingredients = models.ManyToManyField('Ingredient')
+    tags = models.ManyToManyField('Tag')
+
+    def __str__(self):
+        return self.title
